@@ -22,20 +22,18 @@
 
 (require 'icomplete)
 (progn
-	(define-key icomplete-minibuffer-map (kbd "M-k")
+  (define-key icomplete-minibuffer-map (kbd "M-k")
 							'icomplete-forward-completions)
 	(define-key icomplete-minibuffer-map (kbd "M-i")
 							'icomplete-backward-completions))
 
-
 (require 'corfu)
-(progn
-	(global-set-key (kbd "M-k") 'corfu-next)
-	(global-set-key (kbd "M-i") 'corfu-previous))
+(global-set-key (kbd "M-k") 'corfu-next)
+(global-set-key (kbd "M-i") 'corfu-previous)
 
 (global-set-key (kbd "M-b") 'consult-buffer) ; minibuffer
 
-(require 'dired )
+(require 'dired)
 (require 'dired-x)
 (progn
 	(define-key dired-mode-map "l" 'dired-find-alternate-file)
@@ -105,14 +103,17 @@
 (global-hl-line-mode 1)
 (global-visual-line-mode 0)
 (pulsar-global-mode)
-(setq visible-bell t)
 
-(setq treesit-language-source-alist
-   '((elisp "https://github.com/Wilfred/tree-sitter-elisp")
-		 (dart "https://github.com/UserNobody14/tree-sitter-dart")
-     (yaml "https://github.com/ikatyang/tree-sitter-yaml")))
+(require 'treesit)
+(treesit-available-p)
 
-(mapc #'treesit-install-language-grammar (mapcar #'car treesit-language-source-alist))
+;; treesit-language-source-alist
+;; (setq treesit-language-source-alist
+;;    '((elisp "https://github.com/Wilfred/tree-sitter-elisp")
+;; 		 (dart "https://github.com/UserNobody14/tree-sitter-dart")
+;;      (yaml "https://github.com/ikatyang/tree-sitter-yaml")))
+
+;; (mapc #'treesit-install-language-grammar (mapcar #'car treesit-language-source-alist))
 
 (require 'cape)
 (progn
@@ -129,13 +130,26 @@
 
 (marginalia-mode)
 
+;; eglot
+;; (setq eglot-stay-out-of '(flymake))
+(add-hook 'eglot-managed-mode-hook (lambda () (eglot-inlay-hints-mode -1)))
+
+
+;; C 
+(add-hook 'c-mode-hook (lambda () (c-toggle-comment-style -1)))
+
 
 ;; -------------------------------------------------------------------
 ;; look
+
+(setq-default word-wrap t)
+(toggle-truncate-lines -1)
+
+(setq visible-bell nil)
 (fringe-mode '(1 . 4))
 (set-frame-parameter (selected-frame) 'internal-border-width 1)
 
-(add-to-list 'default-frame-alist '(font . "Iosevka-10.2"))
+(add-to-list 'default-frame-alist '(font . "Iosevka-10.5"))
 
 (defun hamed-set-margins ()
   (setq left-fringe-width 15
@@ -143,6 +157,7 @@
 
 (dolist (hook '(text-mode-hook
 								eshell-mode-hook
+								shell-mode-hook
 								org-mode-hook
 								help-mode-hook
 								info-mode-hook))
@@ -163,9 +178,9 @@
 ;; main file for todo, other swtich using a key
 (setq ispell-dictionary "en_US")
 (setenv "LANG" "en_US")
-(setenv "DICPATH" "C:/Hunspell")
-(setq ispell-hunspell-dict-paths-alist
-      '(("en_US" "C:/Hunspell/en_US-large.dic" "C:/Hunspell/en_US-large.aff")))
+;; (setenv "DICPATH" "C:/Hunspell")
+;; (setq ispell-hunspell-dict-paths-alist
+;;       '(("en_US" "C:/Hunspell/en_US-large.dic" "C:/Hunspell/en_US-large.aff")))
 
 (eval-after-load "flyspell"
 	'(progn
@@ -184,10 +199,11 @@
  ;; If there is more than one, they won't work right.
  '(initial-frame-alist '((fullscreen . maximized)))
  '(package-selected-packages
-	 '(ahk-mode cape corfu dart-mode expand-region flutter kotlin-mode marginalia pdf-tools pulsar undo-fu yaml-mode)))
+	 '(osm markdown-mode consult csv-mode eglot cape corfu dart-mode expand-region flutter kotlin-mode marginalia pulsar undo-fu yaml-mode)))
+
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- )
+ '(eglot-inlay-hint-face ((t nil))))

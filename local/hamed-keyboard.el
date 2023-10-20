@@ -109,6 +109,7 @@
 
 ;; find
 (define-key hmd-mode-map (kbd "f f") 'isearch-at-point)
+(define-key hmd-mode-map (kbd "f v") 'isearch-yank-kill)
 (define-key isearch-mode-map (kbd "M-i") 'isearch-repeat-backward)
 (define-key isearch-mode-map (kbd "M-k") 'isearch-repeat-forward)
 
